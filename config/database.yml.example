@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: 
+  password:
+
+development:
+  <<: *default
+  database: "checkin_development"
+
+test:
+  <<: *default
+  database: "checkin_test"
+
+production:
+  <<: *default
+  database: "checkin_production"
