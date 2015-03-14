@@ -55,3 +55,5 @@ group :test do
 	gem "launchy", "~> 2.3.0"
 	gem "selenium-webdriver", "~> 2.39.0"
 end
+
+gem 'carrierwave'
