@@ -5,7 +5,6 @@ class Api::V1::UsersController < Api::BaseController
 		if @user_device.save
 			render json: { success: true }, status: :created
 		else
-			Rails.logger.info "#{@user_device.errors.inspect}"
 			render json: { success: false, message: @user_device.errors }, status: :bad_request
 		end
 	end
