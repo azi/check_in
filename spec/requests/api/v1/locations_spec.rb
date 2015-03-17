@@ -11,7 +11,7 @@ describe "Location API" do
 			it "saves the new location in the database" do
 				expect{
 					post api_v1_new_location_path, @post_params
-				}.to change(Contact, :count).by(1)
+				}.to change(Location, :count).by(1)
 				expect(response.status).to eq 201
 			end
 		end
@@ -68,7 +68,7 @@ describe "Location API" do
 		end
 		it "deletes the location" do
 			expect{
-				delete :destroy, id: @location
+				delete location_path, {id: @location}
 			}.to change(Location,:count).by(-1)
 			expect(response.status).to eq 204
 		end
@@ -88,8 +88,8 @@ describe "Location API" do
 		context "with params[:range]" do
 			it "return json of locations in range" do
 				post_params = {"token" => @user.device_token, 
-					             "current_lat" => @location.lat,
-					             "current_lng" => @location.lng, 
+					             "current_lat" => @location1.lat,
+					             "current_lng" => @location1.lng, 
 					             "range" => 50
 					            }
 				get api_v1_search_location, post_params
