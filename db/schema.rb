@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150315135650) do
+ActiveRecord::Schema.define(version: 20150317142332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,16 +19,14 @@ ActiveRecord::Schema.define(version: 20150315135650) do
   create_table "locations", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "name"
-    t.string   "lng"
-    t.string   "lat"
     t.string   "pic"
     t.text     "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.decimal  "latitude",   precision: 15, scale: 12
+    t.decimal  "longitude",  precision: 15, scale: 12
+    t.string   "address"
   end
-
-  add_index "locations", ["lat"], name: "index_locations_on_lat", using: :btree
-  add_index "locations", ["lng"], name: "index_locations_on_lng", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "nickname"
