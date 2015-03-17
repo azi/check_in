@@ -5,10 +5,10 @@ describe Location do
 		expect(build(:location)).to be_valid
 	end
 	it "is invalid without a lng" do
-		expect(build(:location, lng: nil)).to have(1).errors_on(:lng)
+		expect(build(:location, longitude: nil)).to have(1).errors_on(:longitude)
 	end
 	it "is invalid without a lat" do
-  	expect(build(:location, lat: nil)).to have(1).errors_on(:lat)
+  	expect(build(:location, latitude: nil)).to have(1).errors_on(:latitude)
   end
 	it "is invalid without a message" do
 		expect(build(:location, message: nil)).to have(1).errors_on(:message)

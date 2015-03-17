@@ -3,23 +3,26 @@ require 'spec_helper'
 describe "Location API" do
 	describe "Post location" do
 		before :each do
-			@user = attributes_for(:user)
+			@user = create(:user)
 			@location = attributes_for(:location)
-			@post_params = {"token" => @user[:device_token], "locations" => @location} 
+			@post_params = {"token" => @user.device_token,"locations" => @location} 
 		end
 		context "with valid attributes" do
 			it "saves the new location in the database" do
+				
 				expect{
-					post api_v1_new_location_path, @post_params
+					post api_v1_locations_path, @post_params
 				}.to change(Location, :count).by(1)
+				
 				expect(response.status).to eq 201
+
 			end
 		end
 		context "with invalid attributes" do
 			it "does not save the new location in the database" do
-				@post_params["locations"]["lat"] = nil
+				@post_params["locations"]["latitude"] = nil
 				expect{
-					post api_v1_new_location_path, post_params
+					post api_v1_locations_path, @post_params
 				}.to_not change(Location, :count)
 				expect(response.status).to eq 422
 			end
@@ -29,22 +32,23 @@ describe "Location API" do
 	describe "Edit location" do	
 		before :each do
 			@user = create(:user)
-			@location = create(:location, user:@user)
+			@location = create(:location, user: @user)
+
 		end
 		context "valid attributes" do
 			it "locates the requested @location" do
 				post_params = {"token" => @user.device_token, "locations" => @location.attributes}
-				patch api_v1_location_path, {id: @location}, post_params
+				patch api_v1_location_path(@location), post_params
 				expect(assigns(:location)).to eq(@location)
 			end
 			it "changes @location's attributes" do
 				@location.name = "101 商辦大樓"
 				@location.message = "修改打卡點訊息測試"
 				post_params = {"token" => @user.device_token, "locations" => @location.attributes}
-				patch api_v1_location_path, {id: @location}, post_params
+				patch api_v1_location_path(@location), post_params
 				@location.reload
 				expect(@location.name).to eq("101 商辦大樓")
-				expect(@location.message).to eq(修改打卡點訊息測試)
+				expect(@location.message).to eq("修改打卡點訊息測試")
 			end
 		end
 
@@ -53,26 +57,29 @@ describe "Location API" do
 				@location.name = nil
 				@location.message = "哇勒"
 				post_params = {"token" => @user.device_token, "locations" => @location.attributes}
-				patch api_v1_location_path, {id: @location}, post_params
+				patch api_v1_location_path(@location), post_params
 				@location.reload
-				expect(@contact.name).to eq("101 商辦大樓")
+				expect(@location.name).to eq("101大樓")
 				expect(@location.message).to_not eq("哇勒")
-				expect(response.status).to eq 204
+				expect(response.status).to eq 422
 			end
 		end	
 	end
 
 	describe "Delete location" do
 		before :each do
-			@location = create(:location)
+			@user = create(:user)
+			@location = create(:location, user:@user)
 		end
 		it "deletes the location" do
+			post_params = {"token" => @user.device_token}	
 			expect{
-				delete location_path, {id: @location}
+				delete api_v1_location_path(@location), post_params
 			}.to change(Location,:count).by(-1)
 			expect(response.status).to eq 204
 		end
 	end
+
 	describe "Search locations" do
 		before :each do
 			@user = create(:user)
@@ -88,12 +95,15 @@ describe "Location API" do
 		context "with params[:range]" do
 			it "return json of locations in range" do
 				post_params = {"token" => @user.device_token, 
-					             "current_lat" => @location1.lat,
-					             "current_lng" => @location1.lng, 
+					             "current_lat" => @location1.latitude,
+					             "current_lng" => @location1.longitude, 
 					             "range" => 50
 					            }
-				get api_v1_search_location, post_params
-				expect(assigns(:locations)).to match_array([@location2,@location3,@location5])
+        
+				get search_api_v1_locations_path, post_params
+				result = JSON.parse(response.body)	
+				expect(result["message"].length).to eq(4)
+				
 			end	
 		end
 	end
