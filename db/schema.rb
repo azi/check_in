@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150317142332) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "locations", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "name"
@@ -38,6 +35,6 @@ ActiveRecord::Schema.define(version: 20150317142332) do
     t.datetime "updated_at",        null: false
   end
 
-  add_index "users", ["device_token"], name: "index_users_on_device_token", using: :btree
+  add_index "users", ["device_token"], name: "index_users_on_device_token"
 
 end
