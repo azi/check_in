@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe User do
+
   it "is valid with a nickname, avatar, token, os, os_version" do
   	expect(build(:user)).to be_valid
   end
@@ -10,7 +11,7 @@ describe User do
   it "is invalid without a avatar" do
   	expect(build(:user, avatar:nil)).to have(1).errors_on(:avatar)
   end
-  it "is invalid without a device token" do 
+  it "is invalid without a device token" do
   	expect(build(:user, device_token:nil)).to have(1).errors_on(:device_token)
   end
   it "is invalid without a device os" do
